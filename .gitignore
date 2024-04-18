@@ -1,0 +1,15 @@
+venv**
+.venv**
+*.pyc
+*.sif
+*.aif
+*.log
+*.out
+*.csv
+*.png
+*.job.sh
+*.qdstrm
+*.nsys-rep
+*.ncu-rep
+transformers/
+hf_home/
