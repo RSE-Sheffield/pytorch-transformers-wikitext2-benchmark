@@ -1,0 +1,33 @@
+Bootstrap: docker
+From: nvcr.io/nvidia/pytorch:24.02-py3
+
+%files
+    $PWD/run_clm_bench.sh /opt/run_clm_bench.sh
+    $PWD/requirements-24.02.txt requirements.txt
+
+%post
+    # Install other python deps into the venv
+    python3 -m pip install --pre -r requirements.txt
+    # Clone transformers for the run_clm example
+    git clone --depth 1 --branch v4.37.0 https://github.com/huggingface/transformers.git /opt/transformers/
+
+%test
+    # Ensure expected directories and files have been copied into the image
+    if [ ! -d /opt/transformers ]; then
+        exit 1
+    fi
+    if [ ! -f /opt/run_clm_bench.sh ]; then
+        exit 1
+    fi
+    # Ensure torch imports, and print the cuda/cuda arch list versions for visual checking
+    python3 -c "import torch;print(torch.cuda.is_available()); print(torch.cuda.get_arch_list())"
+    # Print the pytorch version
+    python3 -c "import torch;print(torch.__version__)"
+    # Ensure that the pytorch was built with the c++ abi 
+    python3 -c "import torch;print(torch.compiled_with_cxx11_abi())"
+    # Ensure that transformers.pipelines can be imported successfully. If not, there's likely a conflict between the NGC built packages and pip installed packages (or host python packages mixing into the environment)
+    python3 -c "import transformers.pipelines"
+
+# Define the default run script, to run the benchmark script as-is
+%runscript
+    /opt/run_clm_bench.sh /opt/transformers/examples/pytorch/language-modeling/run_clm.py
