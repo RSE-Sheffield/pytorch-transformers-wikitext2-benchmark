@@ -172,7 +172,7 @@ def main():
     parser.add_argument("--errorbar", action="store_true", help="Include error bars")
     parser.add_argument("--no-xlabel", action="store_true", help="Remove X label(s)")
     parser.add_argument("--bar-label-type", type=str, choices=["edge", "center"], help="Add values to bar labels at the specific position")
-    parser.add_argument("--bar-label-fmt", type=str, help="Format string for bar labels. E.g '%.3f'")
+    parser.add_argument("--bar-label-fmt", type=str, help="Format string for bar labels. E.g %%.3f")
     parser.add_argument("--title-prefix", type=str, help="Prefix for generated figure title")
     parser.add_argument("--legend-loc", type=str, help="Legend location, e.g. 'auto', 'upper left', 'upper right'")
     parser.add_argument("--dpi", type=int, help="Output image DPI")
